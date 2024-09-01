@@ -11,7 +11,7 @@ const GoogleInput = ({
   initialLocation,
   textInputBackgroundColor,
 }: GoogleInputProps) => {
-  const googleplacekey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
+  const googleplacekey = process.env.EXPO_PUBLIC_PLACES_API_KEY;
   return (
     <View
       className={`flex flex-row items-center ${containerStyle} mb-5 justify-center z-50 rounded-xl relative px-3`}

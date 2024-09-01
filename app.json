@@ -12,10 +12,11 @@
       "resizeMode": "contain",
       "backgroundColor": "#2F80ED"
     },
+
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "${process.env.EXPO_PUBLIC_GOOGLE_API_KEY"
+        "googleMapsApiKey": "${process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY}"
       }
     },
     "android": {
@@ -25,10 +26,23 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}"
+          "apiKey": "${process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY}"
         }
       }
     },
+    "web": {
+      "bundler": "metro",
+      "output": "server",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "${process.env.EXPO_PUBLIC_URL}"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "bb0c87c7-f0fe-4415-ba91-34c8a00ee8ec"

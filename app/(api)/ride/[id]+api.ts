@@ -5,7 +5,7 @@ export async function GET(request: Request, { id }: { id: string }) {
     return Response.json({ error: "Missing required fields" }, { status: 400 });
 
   try {
-    const sql = neon(`${process.env.EXPO_PUBLIC_DATABASE_URL}`);
+    const sql = neon(`${process.env.DATABASE_URL}`);
     const response = await sql`
         SELECT
             rides.ride_id,
