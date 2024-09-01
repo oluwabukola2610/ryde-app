@@ -90,7 +90,7 @@ const SignIn = () => {
         >
           <Text>Don't have an account? </Text>
           <Link
-            href="/sign-in"
+            href="/sign-up"
             className=" text-primary-500 hover:underline cursor-pointer"
           >
             Sign Up
