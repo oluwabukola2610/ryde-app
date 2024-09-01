@@ -36,6 +36,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://ryde.dev/"
+      },
+      "eas": {
+        "projectId": "6af303cc-70e9-4204-b80c-a80aa8768f44"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6af303cc-70e9-4204-b80c-a80aa8768f44"
     }
   }
 }
