@@ -49,7 +49,8 @@
       },
       "geoapifyApiKey": "${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}",
       "stripePublishableKey": "${process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY}",
-      "stripeSecretKey": "${process.env.STRIPE_SECRET_KEY}"
+      "stripeSecretKey": "${process.env.STRIPE_SECRET_KEY}",
+      "neonDatabaseUrl": "${process.env.DATABASE_URL}"
     },
     "runtimeVersion": {
       "policy": "appVersion"
