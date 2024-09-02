@@ -46,7 +46,10 @@
     "extra": {
       "eas": {
         "projectId": "bb0c87c7-f0fe-4415-ba91-34c8a00ee8ec"
-      }
+      },
+      "geoapifyApiKey": "${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}",
+      "stripePublishableKey": "${process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY}",
+      "stripeSecretKey": "${process.env.STRIPE_SECRET_KEY}"
     },
     "runtimeVersion": {
       "policy": "appVersion"
