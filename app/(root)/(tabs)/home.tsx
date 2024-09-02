@@ -26,7 +26,7 @@ export default function Home() {
   const { setDestinationLocation, setUserLocation } = useLocationStore();
   const [loading, setLoading] = useState(true);
   const { data: recentRides, loading: isrideLoading } = useFetch(
-    `/(api)/ride/${user?.id}`,
+    `/(api)/ride/${user?.id}`
   );
   const sortedRides = recentRides ? sortRides(recentRides) : [];
 
@@ -68,7 +68,7 @@ export default function Home() {
     signOut();
     router.push("/(auth)/sign-in");
   };
-  if (loading) return <ActivityIndicator size="small" color="#000" />;
+  if (loading) return null;
 
   return (
     <SafeAreaView className="bg-general-500">

@@ -24,7 +24,7 @@ const Map = () => {
   } = useLocationStore();
   const { selectedDriver, setDrivers } = useDriverStore();
 
-  const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
+  const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver+api");
   const [markers, setMarkers] = useState<MarkerData[]>([]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const Map = () => {
     destinationLongitude,
   });
 
-  if (loading || (!userLatitude && !userLongitude))
+  if (loading || !drivers || (!userLatitude && !userLongitude))
     return (
       <View className="flex justify-between items-center w-full">
         <ActivityIndicator size="small" color="#000" />
