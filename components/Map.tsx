@@ -110,7 +110,7 @@ const Map = () => {
           }
         />
       ))}
-
+{/* 
       {destinationLatitude && destinationLongitude && (
         <>
           <Marker
@@ -136,7 +136,7 @@ const Map = () => {
             strokeWidth={2}
           />
         </>
-      )}
+      )} */}
     </MapView>
   );
 };
