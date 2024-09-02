@@ -70,7 +70,7 @@ export const calculateRegion = ({
     longitudeDelta,
   };
 };
-const calculateDriverTimes = async ({
+export const calculateDriverTimes = async ({
   markers,
   userLatitude,
   userLongitude,
