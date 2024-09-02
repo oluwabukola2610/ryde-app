@@ -36,33 +36,34 @@ const Map = () => {
         userLongitude,
       });
       setMarkers(newMarkers as MarkerData[]);
+              setDrivers(drivers as MarkerData[]);
+
     }
   }, [drivers, userLatitude, userLongitude]);
 
-  useEffect(() => {
-    if (
-      markers.length > 0 &&
-      destinationLatitude !== undefined &&
-      destinationLongitude !== undefined
-    ) {
-      calculateDriverTimes({
-        markers,
-        userLatitude,
-        userLongitude,
-        destinationLatitude,
-        destinationLongitude,
-      }).then((drivers) => {
-        setDrivers(drivers as MarkerData[]);
-      });
-    }
-  }, [
-    markers,
-    userLatitude,
-    userLongitude,
-    setDrivers,
-    destinationLongitude,
-    destinationLatitude,
-  ]);
+  // useEffect(() => {
+  //   if (
+  //     markers.length > 0 &&
+  //     destinationLatitude !== undefined &&
+  //     destinationLongitude !== undefined
+  //   ) {
+  //     calculateDriverTimes({
+  //       markers,
+  //       userLatitude,
+  //       userLongitude,
+  //       destinationLatitude,
+  //       destinationLongitude,
+  //     }).then((drivers) => {
+  //     });
+  //   }
+  // }, [
+  //   markers,
+  //   userLatitude,
+  //   userLongitude,
+  //   setDrivers,
+  //   destinationLongitude,
+  //   destinationLatitude,
+  // ]);
 
   const region = calculateRegion({
     userLatitude,
