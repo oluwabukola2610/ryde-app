@@ -14,7 +14,7 @@ import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 
 const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
-
+console.log(directionsAPI)
 const Map = () => {
   const {
     userLongitude,
@@ -22,75 +22,68 @@ const Map = () => {
     destinationLatitude,
     destinationLongitude,
   } = useLocationStore();
-  // const { selectedDriver, setDrivers } = useDriverStore();
+  const { selectedDriver, setDrivers } = useDriverStore();
 
-  // const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
-  // const [markers, setMarkers] = useState<MarkerData[]>([]);
+  const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
+  const [markers, setMarkers] = useState<MarkerData[]>([]);
 
-  // useEffect(() => {
-  //   if (Array.isArray(drivers)) {
-  //     if (!userLatitude || !userLongitude) return;
-  //     const newMarkers = generateMarkersFromData({
-  //       data: drivers,
-  //       userLatitude,
-  //       userLongitude,
-  //     });
-  //     setMarkers(newMarkers as MarkerData[]);
-  //             setDrivers(drivers as MarkerData[]);
+  useEffect(() => {
+    if (Array.isArray(drivers)) {
+      if (!userLatitude || !userLongitude) return;
+      const newMarkers = generateMarkersFromData({
+        data: drivers,
+        userLatitude,
+        userLongitude,
+      });
+      setMarkers(newMarkers as MarkerData[]);
+    }
+  }, [drivers, userLatitude, userLongitude]);
 
-  //   }
-  // }, [drivers, userLatitude, userLongitude]);
+  useEffect(() => {
+    if (
+      markers.length > 0 &&
+      destinationLatitude !== undefined &&
+      destinationLongitude !== undefined
+    ) {
+      calculateDriverTimes({
+        markers,
+        userLatitude,
+        userLongitude,
+        destinationLatitude,
+        destinationLongitude,
+      }).then((drivers) => {
+        setDrivers(drivers as MarkerData[]);
+      });
+    }
+  }, [
+    markers,
+    userLatitude,
+    userLongitude,
+    setDrivers,
+    destinationLongitude,
+    destinationLatitude,
+  ]);
 
-  // useEffect(() => {
-  //   if (
-  //     markers.length > 0 &&
-  //     destinationLatitude !== undefined &&
-  //     destinationLongitude !== undefined
-  //   ) {
-  //     calculateDriverTimes({
-  //       markers,
-  //       userLatitude,
-  //       userLongitude,
-  //       destinationLatitude,
-  //       destinationLongitude,
-  //     }).then((drivers) => {
-  //     });
-  //   }
-  // }, [
-  //   markers,
-  //   userLatitude,
-  //   userLongitude,
-  //   setDrivers,
-  //   destinationLongitude,
-  //   destinationLatitude,
-  // ]);
+  const region = calculateRegion({
+    userLatitude,
+    userLongitude,
+    destinationLatitude,
+    destinationLongitude,
+  });
 
-  // const region = calculateRegion({
-  //   userLatitude,
-  //   userLongitude,
-  //   destinationLatitude,
-  //   destinationLongitude,
-  // });
-  const region = {
-    latitude: userLatitude ?? 0,
-    longitude: userLongitude ??0,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  };
+  if (loading || (!userLatitude && !userLongitude))
+    return (
+      <View className="flex justify-between items-center w-full">
+        <ActivityIndicator size="small" color="#000" />
+      </View>
+    );
 
-  // if (loading || (!userLatitude && !userLongitude))
-  //   return (
-  //     <View className="flex justify-between items-center w-full">
-  //       <ActivityIndicator size="small" color="#000" />
-  //     </View>
-  //   );
-
-  // if (error)
-  //   return (
-  //     <View className="flex justify-between items-center w-full">
-  //       <Text>Error: {error}</Text>
-  //     </View>
-  //   );
+  if (error)
+    return (
+      <View className="flex justify-between items-center w-full">
+        <Text>Error: {error}</Text>
+      </View>
+    );
 
   return (
     <MapView
@@ -103,7 +96,7 @@ const Map = () => {
       // showsUserLocation={true}
       userInterfaceStyle="light"
     >
-      {/* {markers.map((marker, index) => (
+      {markers.map((marker, index) => (
         <Marker
           key={marker.id}
           coordinate={{
@@ -115,8 +108,8 @@ const Map = () => {
             selectedDriver === +marker.id ? icons.selectedMarker : icons.marker
           }
         />
-      ))} */}
-{/* 
+      ))}
+
       {destinationLatitude && destinationLongitude && (
         <>
           <Marker
@@ -142,7 +135,7 @@ const Map = () => {
             strokeWidth={2}
           />
         </>
-      )} */}
+      )}
     </MapView>
   );
 };
