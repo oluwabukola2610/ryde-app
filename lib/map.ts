@@ -70,8 +70,7 @@ export const calculateRegion = ({
     longitudeDelta,
   };
 };
-
-export const calculateDriverTimes = async ({
+const calculateDriverTimes = async ({
   markers,
   userLatitude,
   userLongitude,
@@ -89,56 +88,67 @@ export const calculateDriverTimes = async ({
     !userLongitude ||
     !destinationLatitude ||
     !destinationLongitude
-  )
+  ) {
+    console.error("Missing coordinates. Cannot calculate times.");
     return;
+  }
 
   try {
     const timesPromises = markers.map(async (marker) => {
-      const responseToUser = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=AIzaSyCzMRVpSxW-Hi0_0dCjmlwtIbE8c4UQWmE`
-      );
-      const dataToUser = await responseToUser.json();
-
-      if (
-        !dataToUser.routes ||
-        dataToUser.routes.length === 0 ||
-        !dataToUser.routes[0].legs ||
-        dataToUser.routes[0].legs.length === 0
-      ) {
-        console.error(
-          "Invalid response from directions API to user:",
-          dataToUser,
+      try {
+        const responseToUser = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY}`
         );
+        const dataToUser = await responseToUser.json();
+
+        console.log("Response to user:", dataToUser);
+
+        if (
+          !dataToUser.routes ||
+          dataToUser.routes.length === 0 ||
+          !dataToUser.routes[0].legs ||
+          dataToUser.routes[0].legs.length === 0
+        ) {
+          console.error(
+            "Invalid response from directions API to user:",
+            dataToUser
+          );
+          return { ...marker, time: null, price: null };
+        }
+
+        const timeToUser = dataToUser.routes[0].legs[0].duration.value;
+
+        const responseToDestination = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY}`
+        );
+        const dataToDestination = await responseToDestination.json();
+
+        console.log("Response to destination:", dataToDestination);
+
+        if (
+          !dataToDestination.routes ||
+          dataToDestination.routes.length === 0 ||
+          !dataToDestination.routes[0].legs ||
+          dataToDestination.routes[0].legs.length === 0
+        ) {
+          console.error(
+            "Invalid response from directions API to destination:",
+            dataToDestination
+          );
+          return { ...marker, time: null, price: null };
+        }
+
+        const timeToDestination =
+          dataToDestination.routes[0].legs[0].duration.value;
+
+        const totalTime = (timeToUser + timeToDestination) / 60;
+        const price = (totalTime * 0.5).toFixed(2);
+
+        return { ...marker, time: totalTime, price };
+      } catch (error) {
+        console.error("Error fetching directions:", error);
         return { ...marker, time: null, price: null };
       }
-
-      const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
-
-      const responseToDestination = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=AIzaSyCzMRVpSxW-Hi0_0dCjmlwtIbE8c4UQWmE`
-      );
-      const dataToDestination = await responseToDestination.json();
-
-      if (
-        !dataToDestination.routes ||
-        dataToDestination.routes.length === 0 ||
-        !dataToDestination.routes[0].legs ||
-        dataToDestination.routes[0].legs.length === 0
-      ) {
-        console.error(
-          "Invalid response from directions API to destination:",
-          dataToDestination,
-        );
-        return { ...marker, time: null, price: null };
-      }
-
-      const timeToDestination =
-        dataToDestination.routes[0].legs[0].duration.value;
-
-      const totalTime = (timeToUser + timeToDestination) / 60;
-      const price = (totalTime * 0.5).toFixed(2);
-
-      return { ...marker, time: totalTime, price };
     });
 
     return await Promise.all(timesPromises);
@@ -146,3 +156,4 @@ export const calculateDriverTimes = async ({
     console.error("Error calculating driver times:", error);
   }
 };
+
