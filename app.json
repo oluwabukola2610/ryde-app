@@ -39,7 +39,7 @@
       [
         "expo-router",
         {
-          "origin": "${process.env.EXPO_PUBLIC_URL}"
+          "origin": "https://uber.dev/"
         }
       ]
     ],
