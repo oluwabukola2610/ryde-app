@@ -26,6 +26,8 @@ const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const onSignUpPress = async () => {
     if (!isLoaded) return;
+    // if (!formData.email || !formData.password || !formData.name)
+    //   Alert.alert("Field is required");
     try {
       await signUp.create({
         emailAddress: formData.email,
@@ -51,7 +53,7 @@ const SignUp = () => {
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
         // saving in postgress database
-        await fetchAPI("/(api)/user", {
+        fetchAPI("/(api)/user", {
           method: "POST",
           body: JSON.stringify({
             name: formData.name,
@@ -59,7 +61,6 @@ const SignUp = () => {
             clerkId: completeSignUp.createdUserId,
           }),
         });
-
         setVerification({
           ...verification,
           status: "success",
